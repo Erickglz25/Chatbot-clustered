@@ -6,6 +6,10 @@ const apiai = require('apiai');
 const mongoose = require('mongoose');
 const Agent = require('./models/agent');
 const Promise = require('promise');
+var compression = require('compression');
+var helmet = require('helmet')
+
+
 
 require('dotenv').config();
 const config = require('./config/config');
@@ -25,13 +29,16 @@ db.once('open', function() {
   console.log('Connection Success');        
 })
 
+var app = express();
+    
+app.use(helmet());
+app.use(compression());     
+
 
 class Worker extends SCWorker {             
   run() {
     console.log('   >> Worker PID:', process.pid); 
-    var environment = this.options.environment; //linea verificada set now = 'produccion'
-
-    var app = express();       
+    var environment = this.options.environment; //linea verificada set now = 'produccion'  
 
     var httpServer = this.httpServer;   
     var scServer = this.scServer;       
