@@ -141,11 +141,11 @@ class Worker extends SCWorker {
       }
 
   });                                
-  // -_____________________________----------------------------------------- Todas las lineas verificadas hasta este punto -----------------------------------------------
+  // ------------------------------------------------------------------- Todas las lineas verificadas hasta este punto -----------------------------------------------
   app.post('/create-agent',config._checkToken,function(req,res) { 
       
       var agent = new Agent({
-          agentName: req.body.Name,
+          agentName: req.body.Name, // validacion de campo unico
           agentToken: req.body.ClientToken,
           agentStatus: true,
           agentSession: req.body.Name+'Session'
@@ -157,7 +157,7 @@ class Worker extends SCWorker {
               res();     
           }); 
       }).then(()=>{
-          return res.status(200).json('Agent succesfully created inside a promise');
+          return res.status(200).json('Agent succesfully created');
       })
       .catch((err) => {
         return res.status(403).json(err);
