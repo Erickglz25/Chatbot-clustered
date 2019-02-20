@@ -8,6 +8,9 @@ exports._checkToken = function(req,res,next){
 
 exports._reviewBasics = function(req,res,next){
 
+	if (req.body.UserMsg == " ")
+		return res.status(400).json('Hola, ¿Puedo ayudarte en algo?');
+
 	let message = 'Hola';
 	if(req.body.UserMsg) message = req.body.UserMsg;
 

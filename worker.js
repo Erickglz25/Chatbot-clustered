@@ -50,7 +50,7 @@ class Worker extends SCWorker {
    app.use(bodyParser.urlencoded({ extended: true }));         
 
    app.post('/send-messages',config._checkToken,config._reviewBasics,function(req,res,next) {
-      
+
       if( AgentNameLocal === req.body.UserName ){
           
           function getDialogFlow(){  
@@ -103,7 +103,10 @@ class Worker extends SCWorker {
           
           SaveAgent()
               .then((myagent) => {
-          
+                  
+                if(myagent.agentStatus == false) 
+                    return res.status(403).json("El agente no tiene permisos para enviar mensajes");
+
                   AgentNameLocal = myagent.agentName;
                   AgentSessionLocal = myagent.agentSession;
                   AgentTokenLocal = myagent.agentToken;
@@ -141,7 +144,7 @@ class Worker extends SCWorker {
       }
 
   });                                
-  // ------------------------------------------------------------------- Todas las lineas verificadas hasta este punto -----------------------------------------------
+
   app.post('/create-agent',config._checkToken,function(req,res) { 
       
       var agent = new Agent({
@@ -163,6 +166,17 @@ class Worker extends SCWorker {
         return res.status(403).json(err);
       });
 
+  });
+
+  app.use(function(err, req, res, next) {
+    
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+  
+    // render the error page
+    res.status(err.status || 500);
+    next();
   });
 
   }
